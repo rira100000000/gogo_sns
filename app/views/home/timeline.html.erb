@@ -1,0 +1,47 @@
+<div class="mb-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2 text-primary">タイムライン</h1>
+    <%= link_to "新規投稿", new_post_path, class: "btn btn-primary" %>
+  </div>
+
+  <% if @posts.present? %>
+    <div class="mb-4">
+      <% @posts.each do |post| %>
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <h3 class="h5">
+                  <%= link_to post.user.username, user_path(post.user), class: "text-primary text-decoration-none" %>
+                </h3>
+                <p class="text-muted small"><%= l post.created_at, format: :long %></p>
+              </div>
+              <%= link_to "詳細", post_path(post), class: "btn btn-sm btn-outline-primary" %>
+            </div>
+            <div class="mt-2 font-monospace">
+              <%= simple_format(post.content) %>
+            </div>
+            <div class="mt-2 text-muted small">
+              <span><%= post.comments.count %> コメント</span>
+              <span class="ms-2"><%= post.stamps.count %> スタンプ</span>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <div class="my-4">
+      <%= paginate @posts %>
+    </div>
+  <% else %>
+    <div class="text-center py-5">
+      <p class="text-muted mb-3">まだ投稿がありません。</p>
+      <p class="text-muted">
+        <%= link_to "ユーザーを探す", users_path, class: "text-primary text-decoration-none" %>
+        からフォローを始めるか、
+        <%= link_to "新しい投稿を作成", new_post_path, class: "text-primary text-decoration-none" %>
+        してみましょう！
+      </p>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,56 @@
+ja:
+  activerecord:
+    models:
+      user: ユーザー
+      post: 投稿
+      comment: コメント
+      stamp: スタンプ
+      follow: フォロー
+    attributes:
+      user:
+        username: ユーザー名
+        email: メールアドレス
+        password: パスワード
+        password_confirmation: パスワード（確認）
+        current_password: 現在のパスワード
+        remember_me: ログイン状態を保存
+        profile: プロフィール
+      post:
+        content: 投稿内容
+      comment:
+        content: コメント内容
+    errors:
+      models:
+        post:
+          attributes:
+            content:
+              blank: を入力してください
+              invalid: はひらがなとカタカナのみ使用できます
+  
+  time:
+    formats:
+      default: "%Y/%m/%d %H:%M:%S"
+      long: "%Y年%m月%d日(%a) %H時%M分%S秒"
+      short: "%m/%d %H:%M"
+  
+  date:
+    formats:
+      default: "%Y/%m/%d"
+      long: "%Y年%m月%d日(%a)"
+      short: "%m/%d"
+    day_names: [日曜日, 月曜日, 火曜日, 水曜日, 木曜日, 金曜日, 土曜日]
+    abbr_day_names: [日, 月, 火, 水, 木, 金, 土]
+    month_names: [~, 1月, 2月, 3月, 4月, 5月, 6月, 7月, 8月, 9月, 10月, 11月, 12月]
+    abbr_month_names: [~, 1月, 2月, 3月, 4月, 5月, 6月, 7月, 8月, 9月, 10月, 11月, 12月]
+    order:
+      - :year
+      - :month
+      - :day
+  
+  views:
+    pagination:
+      first: "&laquo; 最初"
+      last: "最後 &raquo;"
+      previous: "&lsaquo; 前"
+      next: "次 &rsaquo;"
+      truncate: "..."

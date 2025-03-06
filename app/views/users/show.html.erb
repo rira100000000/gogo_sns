@@ -1,0 +1,79 @@
+<div class="space-y-8">
+  <div class="bg-white p-6 rounded-lg border">
+    <div class="flex justify-between items-start">
+      <div>
+        <h1 class="text-2xl font-bold text-indigo-600"><%= @user.username %></h1>
+        <p class="text-gray-500 text-sm">登録日: <%= l @user.created_at.to_date, format: :long %></p>
+      </div>
+      
+      <div class="flex space-x-2">
+        <% if user_signed_in? && current_user != @user %>
+          <% if current_user.following?(@user) %>
+            <% follow = current_user.active_follows.find_by(followed_id: @user.id) %>
+            <%= button_to "フォロー解除", follow_path(follow), method: :delete, class: "bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300" %>
+          <% else %>
+            <%= button_to "フォローする", follows_path(followed_id: @user.id), method: :post, class: "bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" %>
+          <% end %>
+        <% elsif user_signed_in? && current_user == @user %>
+          <%= link_to "プロフィール編集", edit_user_path(@user), class: "bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" %>
+        <% end %>
+      </div>
+    </div>
+    
+    <div class="mt-4">
+      <div class="flex space-x-4 text-sm">
+        <span>
+          <span class="font-bold"><%= @user.posts.count %></span> 投稿
+        </span>
+        <span>
+          <%= link_to following_user_path(@user), class: "hover:underline" do %>
+            <span class="font-bold"><%= @user.following.count %></span> フォロー中
+          <% end %>
+        </span>
+        <span>
+          <%= link_to followers_user_path(@user), class: "hover:underline" do %>
+            <span class="font-bold"><%= @user.followers.count %></span> フォロワー
+          <% end %>
+        </span>
+      </div>
+    </div>
+    
+    <% if @user.profile.present? %>
+      <div class="mt-4 whitespace-pre-line">
+        <%= simple_format(@user.profile) %>
+      </div>
+    <% end %>
+  </div>
+
+  <div>
+    <h2 class="text-xl font-bold mb-4 border-b pb-2"><%= @user.username %>さんの投稿</h2>
+    
+    <% if @posts.present? %>
+      <div class="space-y-4">
+        <% @posts.each do |post| %>
+          <div class="border rounded-lg p-4 hover:bg-gray-50">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="text-gray-500 text-sm"><%= l post.created_at, format: :long %></p>
+              </div>
+              <%= link_to "詳細", post_path(post), class: "text-sm text-indigo-600 hover:underline" %>
+            </div>
+            <div class="mt-2 whitespace-pre-line font-medium">
+              <%= simple_format(post.content) %>
+            </div>
+            <div class="mt-2 text-sm text-gray-500">
+              <span><%= post.comments.count %> コメント</span>
+              <span class="ml-2"><%= post.stamps.count %> スタンプ</span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      
+      <div class="my-4">
+        <%= paginate @posts %>
+      </div>
+    <% else %>
+      <p class="text-gray-500 text-center py-4">まだ投稿がありません。</p>
+    <% end %>
+  </div>
+</div>

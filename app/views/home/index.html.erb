@@ -1,0 +1,60 @@
+<div class="mb-4">
+  <div class="text-center py-4">
+    <h1 class="display-4 text-primary">575 SNS へようこそ！</h1>
+    <p class="lead text-muted">ひらがな・カタカナだけの575（俳句形式）を投稿できるSNSです</p>
+  </div>
+
+  <% if user_signed_in? %>
+    <div class="alert alert-info text-center">
+      <p>
+        <%= link_to "新しい投稿を作成", new_post_path, class: "fw-bold text-decoration-none" %>
+        または
+        <%= link_to "タイムラインを見る", timeline_path, class: "fw-bold text-decoration-none" %>
+      </p>
+    </div>
+  <% else %>
+    <div class="alert alert-info text-center">
+      <p>
+        <%= link_to "ログイン", new_user_session_path, class: "fw-bold text-decoration-none" %>
+        または
+        <%= link_to "新規登録", new_user_registration_path, class: "fw-bold text-decoration-none" %>
+        して投稿を始めましょう！
+      </p>
+    </div>
+  <% end %>
+
+  <h2 class="h3 border-bottom border-primary pb-2 mb-4">最新の投稿</h2>
+
+  <% if @posts.present? %>
+    <div class="mb-4">
+      <% @posts.each do |post| %>
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <h3 class="h5">
+                  <%= link_to post.user.username, user_path(post.user), class: "text-primary text-decoration-none" %>
+                </h3>
+                <p class="text-muted small"><%= l post.created_at, format: :long %></p>
+              </div>
+              <%= link_to "詳細", post_path(post), class: "btn btn-sm btn-outline-primary" %>
+            </div>
+            <div class="mt-2 font-monospace">
+              <%= simple_format(post.content) %>
+            </div>
+            <div class="mt-2 text-muted small">
+              <span><%= post.comments.count %> コメント</span>
+              <span class="ms-2"><%= post.stamps.count %> スタンプ</span>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <div class="my-4">
+      <%= paginate @posts %>
+    </div>
+  <% else %>
+    <p class="text-muted text-center py-4">まだ投稿がありません。</p>
+  <% end %>
+</div>

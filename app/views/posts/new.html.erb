@@ -1,0 +1,77 @@
+<div class="space-y-6">
+  <div class="flex items-center space-x-2">
+    <%= link_to "← 戻る", :back, class: "text-indigo-600 hover:underline" %>
+    <h1 class="text-2xl font-bold text-indigo-600">新規投稿</h1>
+  </div>
+
+  <div class="bg-white p-6 rounded-lg border">
+    <%= form_with(model: @post, local: true, class: "space-y-6") do |f| %>
+      <% if @post.errors.any? %>
+        <div class="bg-red-50 text-red-700 p-4 rounded-lg mb-4">
+          <h2 class="font-bold mb-2"><%= pluralize(@post.errors.count, "error") %> 件のエラーがあります：</h2>
+          <ul class="list-disc pl-5">
+            <% @post.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="space-y-2">
+        <div class="flex justify-between">
+          <label class="block text-gray-700 font-bold">投稿内容（575形式）</label>
+          <span class="text-gray-500 text-sm">※ひらがな・カタカナのみ</span>
+        </div>
+        <%= f.text_area :content, rows: 5, class: "w-full border rounded-lg p-3", placeholder: "5文字\n7文字\n5文字" %>
+        <p class="text-gray-500 text-sm">※5-7-5の形式で入力してください。各行の文字数が表示されます。</p>
+      </div>
+
+      <div class="text-center">
+        <%= f.submit "投稿する", class: "bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="bg-indigo-50 p-4 rounded-lg">
+    <h3 class="font-bold text-indigo-800 mb-2">575（ごごご）とは？</h3>
+    <p class="text-indigo-700">
+      575とは、日本の俳句や短歌のフォーマットを指します。<br>
+      5文字、7文字、5文字の3行で構成される短い詩の形式です。<br>
+      このSNSでは、ひらがなとカタカナのみを使用した575形式の投稿ができます。
+    </p>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const contentTextarea = document.querySelector('textarea[name="post[content]"]');
+  
+  contentTextarea.addEventListener('input', function() {
+    const lines = this.value.split('\n');
+    const lineCount = lines.length;
+    
+    // 各行の文字数を表示するための要素を取得または作成
+    let charCountDisplay = document.getElementById('char-count-display');
+    if (!charCountDisplay) {
+      charCountDisplay = document.createElement('div');
+      charCountDisplay.id = 'char-count-display';
+      charCountDisplay.className = 'text-sm mt-1 space-y-1';
+      this.parentNode.appendChild(charCountDisplay);
+    }
+    
+    // 各行の文字数を表示
+    let displayHTML = '';
+    for (let i = 0; i < Math.min(lineCount, 3); i++) {
+      const charCount = (lines[i] || '').replace(/\s+/g, '').length;
+      const expectedCount = [5, 7, 5][i];
+      const colorClass = charCount === expectedCount ? 'text-green-600' : 'text-red-600';
+      displayHTML += `<div class="${colorClass}">${i+1}行目: ${charCount}文字 (目標: ${expectedCount}文字)</div>`;
+    }
+    
+    charCountDisplay.innerHTML = displayHTML;
+  });
+  
+  // 初期表示
+  contentTextarea.dispatchEvent(new Event('input'));
+});
+</script>

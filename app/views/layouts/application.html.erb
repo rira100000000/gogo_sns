@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "575 SNS" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-light">
+    <header class="bg-primary text-white">
+      <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+          <a class="navbar-brand" href="<%= root_path %>">575 SNS</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <% if user_signed_in? %>
+                <li class="nav-item">
+                  <%= link_to "タイムライン", timeline_path, class: "nav-link" %>
+                </li>
+                <li class="nav-item">
+                  <%= link_to "投稿一覧", posts_path, class: "nav-link" %>
+                </li>
+                <li class="nav-item">
+                  <%= link_to "新規投稿", new_post_path, class: "nav-link" %>
+                </li>
+                <li class="nav-item">
+                  <%= link_to "マイページ", user_path(current_user), class: "nav-link" %>
+                </li>
+                <li class="nav-item">
+                  <%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "btn btn-link nav-link" %>
+                </li>
+              <% else %>
+                <li class="nav-item">
+                  <%= link_to "ログイン", new_user_session_path, class: "nav-link" %>
+                </li>
+                <li class="nav-item">
+                  <%= link_to "新規登録", new_user_registration_path, class: "nav-link" %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <div class="container py-4">
+      <% if notice %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <%= notice %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% end %>
+      <% if alert %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <%= alert %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% end %>
+
+      <main class="bg-white p-4 rounded shadow">
+        <%= yield %>
+      </main>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+      <div class="container text-center">
+        <p class="mb-0">&copy; <%= Time.current.year %> 575 SNS</p>
+      </div>
+    </footer>
+  </body>
+</html>
